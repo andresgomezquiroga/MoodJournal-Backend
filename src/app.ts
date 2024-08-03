@@ -4,6 +4,7 @@ import express from 'express'
 import authRoutes from './routes/auth.routes'
 import bodyParser from 'body-parser';
 import cors from 'cors'; // Importa el paquete cors
+import userRoutes from './routes/user.routes'
 
 
 const app = express()
@@ -21,6 +22,7 @@ app.use(cors({
 //Routes
 
 app.use('/auth', authRoutes)
+app.use('/users', userRoutes)
 //authentication
 // api rest de usuarios
 

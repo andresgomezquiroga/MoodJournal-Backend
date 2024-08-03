@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { comparePassword, hashPassword, validateRegister } from "../services/password.service";
+import { comparePassword, hashPassword } from "../services/password.service";
 import prisma from "../models/user";
 import { generateToken } from "../services/auth.service";
 
