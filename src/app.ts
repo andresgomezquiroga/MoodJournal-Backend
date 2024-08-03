@@ -15,7 +15,7 @@ app.use(bodyParser.json());
 
 app.use(cors({
     origin: 'http://localhost:5173', // Permitir solicitudes solo desde este origen
-    methods: ['GET', 'POST'], // metodos htttp
+    methods: ['GET', 'POST', 'DELETE'], // metodos htttp
     allowedHeaders: ['Content-Type', 'Authorization'], // Encabezados permitidos
 }));
 
