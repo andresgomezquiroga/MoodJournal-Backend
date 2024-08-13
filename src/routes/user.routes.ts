@@ -26,6 +26,4 @@ router.get('/', authenticateToken, getAllUser)
 router.get('/:id', authenticateToken, getUserById)
 router.put('/:id', authenticateToken, updateUser)
 router.delete('/:id', authenticateToken, deleteUser)
-
-
 export default router
