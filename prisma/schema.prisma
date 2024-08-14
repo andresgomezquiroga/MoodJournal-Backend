@@ -22,5 +22,6 @@ model user {
   age       Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
+  image      String?   // Esta es la nueva columna para la imagen
 }
 

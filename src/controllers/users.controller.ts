@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { hashPassword } from "../services/password.service";
 import prisma from "../models/user";
-import { error } from "console";
 
 export const createUser = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -84,6 +83,20 @@ export const getUserById = async (req: Request, res: Response): Promise<void> =>
         console.log(error)
         res.status(500).json({ error: 'Hubo un error, pruebe mas tarde' });
     }
+}
+
+
+export const getProfileById = async(req: Request, res: Response): Promise<void> => {
+    const userId = req.params.id
+    const user = await prisma.user.findUnique({
+        where: {
+            id: Number(userId)
+        }
+    })
+    if (!user) {
+        res.status(404).json({error: 'El usuario no fue encontrado'})
+    }
+    res.status(200).json(user)
 }
 
 
