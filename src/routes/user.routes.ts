@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response } from 'express'
 import jwt from 'jsonwebtoken'
-import { createUser, getAllUser, deleteUser, getUserById, updateUser, getProfileById } from '../controllers/users.controller'
+import upload from '../services/Storage.service';
+import { createUser, getAllUser, deleteUser, getUserById, updateUser, getProfileById, updateProfile } from '../controllers/users.controller'
 
 const router = express.Router()
 
@@ -21,10 +22,14 @@ const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
     })
 }
 
+
+
+
 router.post('/', authenticateToken, createUser)
 router.get('/', authenticateToken, getAllUser)
 router.get('/:id', authenticateToken, getUserById)
 router.put('/:id', authenticateToken, updateUser)
 router.delete('/:id', authenticateToken, deleteUser)
 router.get('/profile/:id', authenticateToken, getProfileById)
+router.put('/updateProfile/:id', upload.single('image'), authenticateToken, updateProfile);
 export default router

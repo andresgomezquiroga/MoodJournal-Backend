@@ -5,6 +5,7 @@ import authRoutes from './routes/auth.routes'
 import bodyParser from 'body-parser';
 import cors from 'cors'; // Importa el paquete cors
 import userRoutes from './routes/user.routes'
+import path from 'path';
 
 
 const app = express()
@@ -22,6 +23,7 @@ app.use(cors({
 //Routes
 app.use('/auth', authRoutes)
 app.use('/users', userRoutes)
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 //authentication
 // api rest de usuarios
 

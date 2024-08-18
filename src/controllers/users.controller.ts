@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { hashPassword } from "../services/password.service";
 import prisma from "../models/user";
 
+
 export const createUser = async (req: Request, res: Response): Promise<void> => {
     try {
         const { email, password, name, last_name, age } = req.body;
@@ -86,18 +87,7 @@ export const getUserById = async (req: Request, res: Response): Promise<void> =>
 }
 
 
-export const getProfileById = async(req: Request, res: Response): Promise<void> => {
-    const userId = req.params.id
-    const user = await prisma.user.findUnique({
-        where: {
-            id: Number(userId)
-        }
-    })
-    if (!user) {
-        res.status(404).json({error: 'El usuario no fue encontrado'})
-    }
-    res.status(200).json(user)
-}
+
 
 
 
@@ -182,5 +172,63 @@ export const deleteUser = async (req: Request, res: Response): Promise<void> => 
         res.status(500).json({
             error: 'Hubo un error al eliminar el usuario',
         });
+    }
+};
+
+
+export const getProfileById = async (req: Request, res: Response): Promise<void> => {
+    const userId = req.params.id
+    const user = await prisma.user.findUnique({
+        where: {
+            id: Number(userId)
+        }
+    })
+    if (!user) {
+        res.status(404).json({ error: 'El usuario no fue encontrado' })
+    }
+    res.status(200).json(user)
+}
+
+
+export const updateProfile = async (req: Request, res: Response): Promise<void> => {
+    const { name, last_name, email, age, password } = req.body;
+    const img = req.file?.filename;
+    const updateProfile: { [key: string]: any } = { ...req.body };
+    const id = req.params.id;
+
+    if (name) updateProfile.name = name;
+    if (last_name) updateProfile.last_name = last_name;
+    if (email) {
+        // Verifica si el email ya está en uso
+        const existingUser = await prisma.user.findUnique({
+            where: { email }
+        });
+
+        if (existingUser && existingUser.id !== Number(id)) {
+            res.status(400).json({ error: 'El email ya está en uso por otro usuario.' });
+            return;
+        }
+
+        updateProfile.email = email;
+    }
+    if (age) updateProfile.age = parseInt(age);
+
+    if (password) {
+        const passwordHash = await hashPassword(password);
+        updateProfile.password = passwordHash;
+    }
+
+    if (img) {
+        updateProfile.image = `/uploads/${img}`;
+    }
+
+    try {
+         await prisma.user.update({
+            where: { id: Number(id) },
+            data: updateProfile,
+        });
+        res.status(200).json({ message: 'El perfil ha sido actualizado correctamente' });
+    } catch (error) {
+        res.status(500).json({ error: 'Error al actualizar el perfil' });
     }
 };
